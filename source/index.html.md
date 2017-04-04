@@ -50,6 +50,8 @@ Exemple :
    (0.1,0) (0.8,0.3) (0,0.5) (-1,1.05) (-0.4,0) (-0.1,-0.7) (O,-0.6) (1.09,-1)
 ```
 
+![chassis](/images/chassis.png)
+
   * La densité du chassis est un float compris entre 30 et 300 (bornes incluses).
 
   * Le rayon d'une roue est un float compris entre 0.2 et 0.5 (bornes incluses).
@@ -61,3 +63,8 @@ Exemple :
   * Pas plus de voitures soumises par appel de la fonction d'évaluation.
 
   * Le champion de chaque équipe est enregistré à chaque appel de la fonction d'évaluation. Si le champion de la dernière évaluation est moins bon que le champion de la soumission précédente, c'est tout de même le dernier champion qui sera enregistré.
+
+## Les étapes
+
+![deroulement](/images/deroulement.png)
+
