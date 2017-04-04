@@ -226,6 +226,7 @@
       </div>
         <ul class="toc-footer">
             <li><a href='http://genetic-car.herokuapp.com/#/home'>Portail du jeux</a></li>
+            <li><a href='http://genetic-car.herokuapp.com/swagger-ui.html#/'>Documentation Swagger</a></li>
         </ul>
     </div>
     <div class="page-wrapper">
@@ -240,6 +241,38 @@
 <ul>
 <li><a href="http://boxcar2d.com/">http://boxcar2d.com/</a></li>
 <li>fork de <a href="http://rednuht.org/genetic_cars_2/">http://rednuht.org/genetic_cars_2/</a> (<a href="https://github.com/red42/HTML5_Genetic_Cars">github</a>)</li>
+</ul>
+
+<h2 id="la-mod-lisation">La modélisation</h2>
+
+<p>Une voiture est composée de:</p>
+
+<ul>
+<li><p>1 chassis: 8 vecteurs et une densité</p></li>
+<li><p>2 roues : 1 rayon, 1 densité et un somet permettant de rattacher la roue au chassis (pour chaque roue)</p></li>
+</ul>
+
+<h2 id="les-contraintes">Les contraintes</h2>
+
+<p>Les 8 vecteurs composants le chassis sont définis come suit:
+<code class="prettyprint">
+(X1,0) (X2,Y1) (0,Y2) (-X3,Y3) (-X4,0) (-X5,-Y4) (0,-Y5) (X6, -Y6)
+</code>
+où les Xn et Yn sont des float conpris entre 0.1 et 1.1 (bornes incluses).
+La position des 0 et des signes est à respecter.</p>
+
+<p>Exemple :
+<code class="prettyprint">
+   (0.1,0) (0.8,0.3) (0,0.5) (-1,1.05) (-0.4,0) (-0.1,-0.7) (O,-0.6) (1.09,-1)
+</code></p>
+
+<ul>
+<li><p>La densité du chassis est un float compris entre 30 et 300 (bornes incluses).</p></li>
+<li><p>Le rayon d&#39;une roue est un float compris entre 0.2 et 0.5 (bornes incluses).</p></li>
+<li><p>La densité d&#39;une roue est un float compris entre 40 et 100 (bornes incluses).</p></li>
+<li><p>Le sommet reliant la roue au chassis est un entier compris entre 0 et 7 (bornes incluses).</p></li>
+<li><p>Pas plus de voitures soumises par appel de la fonction d&#39;évaluation.</p></li>
+<li><p>Le champion de chaque équipe est enregistré à chaque appel de la fonction d&#39;évaluation. Si le champion de la dernière évaluation est moins bon que le champion de la soumission précédente, c&#39;est tout de même le dernier champion qui sera enregistré.</p></li>
 </ul>
 
           <h1 id="simulation">Simulation</h1>
@@ -346,15 +379,187 @@ N'oubliez pas de remplacer <code>{team}</code> par le nom de votre équipe.
   <span class="uri">/simulation/evaluate/{team}</span>
 </coderest></p>
 
+<p>Le body doit contenir un tableau d&#39;objet comme le montre l&#39;exemple ci-contre.</p>
+
+<blockquote>
+<p>Exemple de corps de request.</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"chassis"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"vecteurs"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="mf">0.2421346</span><span class="p">,</span><span class="w">
+          </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="mf">0.5412285</span><span class="p">,</span><span class="w">
+          </span><span class="mf">0.46367344</span><span class="p">,</span><span class="w">
+          </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="mf">0.40514365</span><span class="p">,</span><span class="w">
+          </span><span class="mf">-0.7945067</span><span class="p">,</span><span class="w">
+          </span><span class="mf">0.49603817</span><span class="p">,</span><span class="w">
+          </span><span class="mf">-0.9156932</span><span class="p">,</span><span class="w">
+          </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="mf">-1.0747113</span><span class="p">,</span><span class="w">
+          </span><span class="mf">-0.8086521</span><span class="p">,</span><span class="w">
+          </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="mf">-0.9599218</span><span class="p">,</span><span class="w">
+          </span><span class="mf">1.0563881</span><span class="p">,</span><span class="w">
+          </span><span class="mf">-0.81461006</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"densite"</span><span class="p">:</span><span class="w"> </span><span class="mf">251.71265</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"wheel1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"radius"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.35081068</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"density"</span><span class="p">:</span><span class="w"> </span><span class="mf">49.408844</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"vertex"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"wheel2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"radius"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.4488887</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"density"</span><span class="p">:</span><span class="w"> </span><span class="mf">58.341553</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"vertex"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
 <p>Ce endpoint permet de lancer l&#39;évaluation d&#39;une liste de véhicules.</p>
 
 <p>La variable team est à remplacer par le nom de votre équipe.</p>
-<pre class="highlight java tab-java"><code></code></pre><pre class="highlight javascript tab-javascript"><code></code></pre><pre class="highlight go tab-go"><code></code></pre><pre class="highlight python tab-python"><code></code></pre><pre class="highlight csharp tab-csharp"><code>  <span class="err">```</span><span class="n">ruby</span>
 
-<span class="p">&lt;</span><span class="n">aside</span> <span class="k">class</span><span class="err">="</span><span class="nc">notice</span><span class="s">"&gt;
-</span><span class="n">N</span><span class="err">'</span><span class="n">oubliez</span> <span class="n">pas</span> <span class="n">de</span> <span class="n">remplacer</span> <span class="p">&lt;</span><span class="n">code</span><span class="p">&gt;{</span><span class="n">team</span><span class="p">}&lt;/</span><span class="n">code</span><span class="p">&gt;</span> <span class="n">par</span> <span class="n">le</span> <span class="n">nom</span> <span class="n">de</span> <span class="n">votre</span> <span class="err">é</span><span class="n">quipe</span><span class="p">.</span>
-<span class="p">&lt;/</span><span class="n">aside</span><span class="p">&gt;</span>
+<aside class="warning">
+Le tableau ne doit pas contenir plus de 20 éléments.
+</aside>
+<pre class="highlight java tab-java"><code><span class="n">OkHttpClient</span> <span class="n">client</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OkHttpClient</span><span class="o">();</span>
+
+<span class="n">MediaType</span> <span class="n">mediaType</span> <span class="o">=</span> <span class="n">MediaType</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="s">"application/json"</span><span class="o">);</span>
+<span class="n">RequestBody</span> <span class="n">body</span> <span class="o">=</span> <span class="n">RequestBody</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">mediaType</span><span class="o">,</span> <span class="s">"[\n    {\n      \"chassis\": {\n        \"vecteurs\": [\n          0.2421346,\n          0,\n          0.5412285,\n          0.46367344,\n          0,\n          0.40514365,\n          -0.7945067,\n          0.49603817,\n          -0.9156932,\n          0,\n          -1.0747113,\n          -0.8086521,\n          0,\n          -0.9599218,\n          1.0563881,\n          -0.81461006\n        ],\n        \"densite\": 251.71265\n      },\n      \"wheel1\": {\n        \"radius\": 0.35081068,\n        \"density\": 49.408844,\n        \"vertex\": 5\n      },\n      \"wheel2\": {\n        \"radius\": 0.4488887,\n        \"density\": 58.341553,\n        \"vertex\": 7\n      }\n    }\n]"</span><span class="o">);</span>
+<span class="n">Request</span> <span class="n">request</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Request</span><span class="o">.</span><span class="na">Builder</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">url</span><span class="o">(</span><span class="s">"http://genetic-car.herokuapp.com/simulation/evaluate/RED"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">post</span><span class="o">(</span><span class="n">body</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">addHeader</span><span class="o">(</span><span class="s">"content-type"</span><span class="o">,</span> <span class="s">"application/json"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">addHeader</span><span class="o">(</span><span class="s">"cache-control"</span><span class="o">,</span> <span class="s">"no-cache"</span><span class="o">)</span>
+  <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+
+<span class="n">Response</span> <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">newCall</span><span class="o">(</span><span class="n">request</span><span class="o">).</span><span class="na">execute</span><span class="o">();</span>
+</code></pre><pre class="highlight javascript tab-javascript"><code><span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">([</span>
+<span class="p">{</span>
+<span class="s2">"chassis"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"vecteurs"</span><span class="p">:</span> <span class="p">[</span>
+    <span class="mf">0.2421346</span><span class="p">,</span>
+    <span class="mi">0</span><span class="p">,</span>
+    <span class="mf">0.5412285</span><span class="p">,</span>
+    <span class="mf">0.46367344</span><span class="p">,</span>
+    <span class="mi">0</span><span class="p">,</span>
+    <span class="mf">0.40514365</span><span class="p">,</span>
+    <span class="o">-</span><span class="mf">0.7945067</span><span class="p">,</span>
+    <span class="mf">0.49603817</span><span class="p">,</span>
+    <span class="o">-</span><span class="mf">0.9156932</span><span class="p">,</span>
+    <span class="mi">0</span><span class="p">,</span>
+    <span class="o">-</span><span class="mf">1.0747113</span><span class="p">,</span>
+    <span class="o">-</span><span class="mf">0.8086521</span><span class="p">,</span>
+    <span class="mi">0</span><span class="p">,</span>
+    <span class="o">-</span><span class="mf">0.9599218</span><span class="p">,</span>
+    <span class="mf">1.0563881</span><span class="p">,</span>
+    <span class="o">-</span><span class="mf">0.81461006</span>
+    <span class="p">],</span>
+    <span class="s2">"densite"</span><span class="p">:</span> <span class="mf">251.71265</span>
+<span class="p">},</span>
+<span class="s2">"wheel1"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"radius"</span><span class="p">:</span> <span class="mf">0.35081068</span><span class="p">,</span>
+    <span class="s2">"density"</span><span class="p">:</span> <span class="mf">49.408844</span><span class="p">,</span>
+    <span class="s2">"vertex"</span><span class="p">:</span> <span class="mi">5</span>
+<span class="p">},</span>
+<span class="s2">"wheel2"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"radius"</span><span class="p">:</span> <span class="mf">0.4488887</span><span class="p">,</span>
+    <span class="s2">"density"</span><span class="p">:</span> <span class="mf">58.341553</span><span class="p">,</span>
+    <span class="s2">"vertex"</span><span class="p">:</span> <span class="mi">7</span>
+<span class="p">}</span>
+<span class="p">}</span>
+<span class="p">]);</span>
+
+<span class="kd">var</span> <span class="nx">xhr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">withCredentials</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">"readystatechange"</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">===</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">responseText</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="s2">"POST"</span><span class="p">,</span> <span class="s2">"http://genetic-car.herokuapp.com/simulation/evaluate/RED"</span><span class="p">);</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">setRequestHeader</span><span class="p">(</span><span class="s2">"content-type"</span><span class="p">,</span> <span class="s2">"application/json"</span><span class="p">);</span>
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">setRequestHeader</span><span class="p">(</span><span class="s2">"cache-control"</span><span class="p">,</span> <span class="s2">"no-cache"</span><span class="p">);</span>
+
+<span class="nx">xhr</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+</code></pre><pre class="highlight go tab-go"><code><span class="k">package</span><span class="x"> </span><span class="n">main</span><span class="x">
+
+</span><span class="k">import</span><span class="x"> </span><span class="p">(</span><span class="x">
+    </span><span class="s">"fmt"</span><span class="x">
+    </span><span class="s">"strings"</span><span class="x">
+    </span><span class="s">"net/http"</span><span class="x">
+    </span><span class="s">"io/ioutil"</span><span class="x">
+</span><span class="p">)</span><span class="x">
+
+</span><span class="k">func</span><span class="x"> </span><span class="n">main</span><span class="p">()</span><span class="x"> </span><span class="p">{</span><span class="x">
+
+    </span><span class="n">url</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="s">"http://genetic-car.herokuapp.com/simulation/evaluate/RED"</span><span class="x">
+
+    </span><span class="n">payload</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">strings</span><span class="o">.</span><span class="n">NewReader</span><span class="p">(</span><span class="s">"[</span><span class="se">\n</span><span class="s">    {</span><span class="se">\n</span><span class="s">      </span><span class="se">\"</span><span class="s">chassis</span><span class="se">\"</span><span class="s">: {</span><span class="se">\n</span><span class="s">        </span><span class="se">\"</span><span class="s">vecteurs</span><span class="se">\"</span><span class="s">: [</span><span class="se">\n</span><span class="s">          0.2421346,</span><span class="se">\n</span><span class="s">          0,</span><span class="se">\n</span><span class="s">          0.5412285,</span><span class="se">\n</span><span class="s">          0.46367344,</span><span class="se">\n</span><span class="s">          0,</span><span class="se">\n</span><span class="s">          0.40514365,</span><span class="se">\n</span><span class="s">          -0.7945067,</span><span class="se">\n</span><span class="s">          0.49603817,</span><span class="se">\n</span><span class="s">          -0.9156932,</span><span class="se">\n</span><span class="s">          0,</span><span class="se">\n</span><span class="s">          -1.0747113,</span><span class="se">\n</span><span class="s">          -0.8086521,</span><span class="se">\n</span><span class="s">          0,</span><span class="se">\n</span><span class="s">          -0.9599218,</span><span class="se">\n</span><span class="s">          1.0563881,</span><span class="se">\n</span><span class="s">          -0.81461006</span><span class="se">\n</span><span class="s">        ],</span><span class="se">\n</span><span class="s">        </span><span class="se">\"</span><span class="s">densite</span><span class="se">\"</span><span class="s">: 251.71265</span><span class="se">\n</span><span class="s">      },</span><span class="se">\n</span><span class="s">      </span><span class="se">\"</span><span class="s">wheel1</span><span class="se">\"</span><span class="s">: {</span><span class="se">\n</span><span class="s">        </span><span class="se">\"</span><span class="s">radius</span><span class="se">\"</span><span class="s">: 0.35081068,</span><span class="se">\n</span><span class="s">        </span><span class="se">\"</span><span class="s">density</span><span class="se">\"</span><span class="s">: 49.408844,</span><span class="se">\n</span><span class="s">        </span><span class="se">\"</span><span class="s">vertex</span><span class="se">\"</span><span class="s">: 5</span><span class="se">\n</span><span class="s">      },</span><span class="se">\n</span><span class="s">      </span><span class="se">\"</span><span class="s">wheel2</span><span class="se">\"</span><span class="s">: {</span><span class="se">\n</span><span class="s">        </span><span class="se">\"</span><span class="s">radius</span><span class="se">\"</span><span class="s">: 0.4488887,</span><span class="se">\n</span><span class="s">        </span><span class="se">\"</span><span class="s">density</span><span class="se">\"</span><span class="s">: 58.341553,</span><span class="se">\n</span><span class="s">        </span><span class="se">\"</span><span class="s">vertex</span><span class="se">\"</span><span class="s">: 7</span><span class="se">\n</span><span class="s">      }</span><span class="se">\n</span><span class="s">    }</span><span class="se">\n</span><span class="s">]"</span><span class="p">)</span><span class="x">
+
+    </span><span class="n">req</span><span class="p">,</span><span class="x"> </span><span class="n">_</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">http</span><span class="o">.</span><span class="n">NewRequest</span><span class="p">(</span><span class="s">"POST"</span><span class="p">,</span><span class="x"> </span><span class="n">url</span><span class="p">,</span><span class="x"> </span><span class="n">payload</span><span class="p">)</span><span class="x">
+
+    </span><span class="n">req</span><span class="o">.</span><span class="n">Header</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">"content-type"</span><span class="p">,</span><span class="x"> </span><span class="s">"application/json"</span><span class="p">)</span><span class="x">
+    </span><span class="n">req</span><span class="o">.</span><span class="n">Header</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="s">"cache-control"</span><span class="p">,</span><span class="x"> </span><span class="s">"no-cache"</span><span class="p">)</span><span class="x">
+
+    </span><span class="n">res</span><span class="p">,</span><span class="x"> </span><span class="n">_</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">http</span><span class="o">.</span><span class="n">DefaultClient</span><span class="o">.</span><span class="n">Do</span><span class="p">(</span><span class="n">req</span><span class="p">)</span><span class="x">
+
+    </span><span class="k">defer</span><span class="x"> </span><span class="n">res</span><span class="o">.</span><span class="n">Body</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span><span class="x">
+    </span><span class="n">body</span><span class="p">,</span><span class="x"> </span><span class="n">_</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">ioutil</span><span class="o">.</span><span class="n">ReadAll</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">Body</span><span class="p">)</span><span class="x">
+
+    </span><span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="x">
+    </span><span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="kt">string</span><span class="p">(</span><span class="n">body</span><span class="p">))</span><span class="x">
+
+</span><span class="p">}</span><span class="x">
+</span></code></pre><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">http.client</span>
+
+<span class="n">conn</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">HTTPConnection</span><span class="p">(</span><span class="s">"genetic-car.herokuapp.com"</span><span class="p">)</span>
+
+<span class="n">payload</span> <span class="o">=</span> <span class="s">"[</span><span class="se">\n</span><span class="s">    {</span><span class="se">\n</span><span class="s">      </span><span class="se">\"</span><span class="s">chassis</span><span class="se">\"</span><span class="s">: {</span><span class="se">\n</span><span class="s">        </span><span class="se">\"</span><span class="s">vecteurs</span><span class="se">\"</span><span class="s">: [</span><span class="se">\n</span><span class="s">          0.2421346,</span><span class="se">\n</span><span class="s">          0,</span><span class="se">\n</span><span class="s">          0.5412285,</span><span class="se">\n</span><span class="s">          0.46367344,</span><span class="se">\n</span><span class="s">          0,</span><span class="se">\n</span><span class="s">          0.40514365,</span><span class="se">\n</span><span class="s">          -0.7945067,</span><span class="se">\n</span><span class="s">          0.49603817,</span><span class="se">\n</span><span class="s">          -0.9156932,</span><span class="se">\n</span><span class="s">          0,</span><span class="se">\n</span><span class="s">          -1.0747113,</span><span class="se">\n</span><span class="s">          -0.8086521,</span><span class="se">\n</span><span class="s">          0,</span><span class="se">\n</span><span class="s">          -0.9599218,</span><span class="se">\n</span><span class="s">          1.0563881,</span><span class="se">\n</span><span class="s">          -0.81461006</span><span class="se">\n</span><span class="s">        ],</span><span class="se">\n</span><span class="s">        </span><span class="se">\"</span><span class="s">densite</span><span class="se">\"</span><span class="s">: 251.71265</span><span class="se">\n</span><span class="s">      },</span><span class="se">\n</span><span class="s">      </span><span class="se">\"</span><span class="s">wheel1</span><span class="se">\"</span><span class="s">: {</span><span class="se">\n</span><span class="s">        </span><span class="se">\"</span><span class="s">radius</span><span class="se">\"</span><span class="s">: 0.35081068,</span><span class="se">\n</span><span class="s">        </span><span class="se">\"</span><span class="s">density</span><span class="se">\"</span><span class="s">: 49.408844,</span><span class="se">\n</span><span class="s">        </span><span class="se">\"</span><span class="s">vertex</span><span class="se">\"</span><span class="s">: 5</span><span class="se">\n</span><span class="s">      },</span><span class="se">\n</span><span class="s">      </span><span class="se">\"</span><span class="s">wheel2</span><span class="se">\"</span><span class="s">: {</span><span class="se">\n</span><span class="s">        </span><span class="se">\"</span><span class="s">radius</span><span class="se">\"</span><span class="s">: 0.4488887,</span><span class="se">\n</span><span class="s">        </span><span class="se">\"</span><span class="s">density</span><span class="se">\"</span><span class="s">: 58.341553,</span><span class="se">\n</span><span class="s">        </span><span class="se">\"</span><span class="s">vertex</span><span class="se">\"</span><span class="s">: 7</span><span class="se">\n</span><span class="s">      }</span><span class="se">\n</span><span class="s">    }</span><span class="se">\n</span><span class="s">]"</span>
+
+<span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">'content-type'</span><span class="p">:</span> <span class="s">"application/json"</span><span class="p">,</span>
+    <span class="s">'cache-control'</span><span class="p">:</span> <span class="s">"no-cache"</span>
+<span class="p">}</span>
+
+<span class="n">conn</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s">"POST"</span><span class="p">,</span> <span class="s">"/simulation/evaluate/RED"</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="n">headers</span><span class="p">)</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">getresponse</span><span class="p">()</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">"utf-8"</span><span class="p">))</span>
+</code></pre><pre class="highlight csharp tab-csharp"><code><span class="kt">var</span> <span class="n">client</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">RestClient</span><span class="p">(</span><span class="s">"http://genetic-car.herokuapp.com/simulation/evaluate/RED"</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">request</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">RestRequest</span><span class="p">(</span><span class="n">Method</span><span class="p">.</span><span class="n">POST</span><span class="p">);</span>
+<span class="n">request</span><span class="p">.</span><span class="nf">AddHeader</span><span class="p">(</span><span class="s">"cache-control"</span><span class="p">,</span> <span class="s">"no-cache"</span><span class="p">);</span>
+<span class="n">request</span><span class="p">.</span><span class="nf">AddHeader</span><span class="p">(</span><span class="s">"content-type"</span><span class="p">,</span> <span class="s">"application/json"</span><span class="p">);</span>
+<span class="n">request</span><span class="p">.</span><span class="nf">AddParameter</span><span class="p">(</span><span class="s">"application/json"</span><span class="p">,</span> <span class="s">"[\n    {\n      \"chassis\": {\n        \"vecteurs\": [\n          0.2421346,\n          0,\n          0.5412285,\n          0.46367344,\n          0,\n          0.40514365,\n          -0.7945067,\n          0.49603817,\n          -0.9156932,\n          0,\n          -1.0747113,\n          -0.8086521,\n          0,\n          -0.9599218,\n          1.0563881,\n          -0.81461006\n        ],\n        \"densite\": 251.71265\n      },\n      \"wheel1\": {\n        \"radius\": 0.35081068,\n        \"density\": 49.408844,\n        \"vertex\": 5\n      },\n      \"wheel2\": {\n        \"radius\": 0.4488887,\n        \"density\": 58.341553,\n        \"vertex\": 7\n      }\n    }\n]"</span><span class="p">,</span> <span class="n">ParameterType</span><span class="p">.</span><span class="n">RequestBody</span><span class="p">);</span>
+<span class="n">IRestResponse</span> <span class="n">response</span> <span class="p">=</span> <span class="n">client</span><span class="p">.</span><span class="nf">Execute</span><span class="p">(</span><span class="n">request</span><span class="p">);</span>
+</code></pre><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'uri'</span>
+<span class="nb">require</span> <span class="s1">'net/http'</span>
+
+<span class="n">url</span> <span class="o">=</span> <span class="no">URI</span><span class="p">(</span><span class="s2">"http://genetic-car.herokuapp.com/simulation/evaluate/RED"</span><span class="p">)</span>
+
+<span class="n">http</span> <span class="o">=</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTP</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">url</span><span class="p">.</span><span class="nf">host</span><span class="p">,</span> <span class="n">url</span><span class="p">.</span><span class="nf">port</span><span class="p">)</span>
+
+<span class="n">request</span> <span class="o">=</span> <span class="no">Net</span><span class="o">::</span><span class="no">HTTP</span><span class="o">::</span><span class="no">Post</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="n">request</span><span class="p">[</span><span class="s2">"content-type"</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'application/json'</span>
+<span class="n">request</span><span class="p">[</span><span class="s2">"cache-control"</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'no-cache'</span>
+<span class="n">request</span><span class="p">.</span><span class="nf">body</span> <span class="o">=</span> <span class="s2">"[</span><span class="se">\n</span><span class="s2">    {</span><span class="se">\n</span><span class="s2">      </span><span class="se">\"</span><span class="s2">chassis</span><span class="se">\"</span><span class="s2">: {</span><span class="se">\n</span><span class="s2">        </span><span class="se">\"</span><span class="s2">vecteurs</span><span class="se">\"</span><span class="s2">: [</span><span class="se">\n</span><span class="s2">          0.2421346,</span><span class="se">\n</span><span class="s2">          0,</span><span class="se">\n</span><span class="s2">          0.5412285,</span><span class="se">\n</span><span class="s2">          0.46367344,</span><span class="se">\n</span><span class="s2">          0,</span><span class="se">\n</span><span class="s2">          0.40514365,</span><span class="se">\n</span><span class="s2">          -0.7945067,</span><span class="se">\n</span><span class="s2">          0.49603817,</span><span class="se">\n</span><span class="s2">          -0.9156932,</span><span class="se">\n</span><span class="s2">          0,</span><span class="se">\n</span><span class="s2">          -1.0747113,</span><span class="se">\n</span><span class="s2">          -0.8086521,</span><span class="se">\n</span><span class="s2">          0,</span><span class="se">\n</span><span class="s2">          -0.9599218,</span><span class="se">\n</span><span class="s2">          1.0563881,</span><span class="se">\n</span><span class="s2">          -0.81461006</span><span class="se">\n</span><span class="s2">        ],</span><span class="se">\n</span><span class="s2">        </span><span class="se">\"</span><span class="s2">densite</span><span class="se">\"</span><span class="s2">: 251.71265</span><span class="se">\n</span><span class="s2">      },</span><span class="se">\n</span><span class="s2">      </span><span class="se">\"</span><span class="s2">wheel1</span><span class="se">\"</span><span class="s2">: {</span><span class="se">\n</span><span class="s2">        </span><span class="se">\"</span><span class="s2">radius</span><span class="se">\"</span><span class="s2">: 0.35081068,</span><span class="se">\n</span><span class="s2">        </span><span class="se">\"</span><span class="s2">density</span><span class="se">\"</span><span class="s2">: 49.408844,</span><span class="se">\n</span><span class="s2">        </span><span class="se">\"</span><span class="s2">vertex</span><span class="se">\"</span><span class="s2">: 5</span><span class="se">\n</span><span class="s2">      },</span><span class="se">\n</span><span class="s2">      </span><span class="se">\"</span><span class="s2">wheel2</span><span class="se">\"</span><span class="s2">: {</span><span class="se">\n</span><span class="s2">        </span><span class="se">\"</span><span class="s2">radius</span><span class="se">\"</span><span class="s2">: 0.4488887,</span><span class="se">\n</span><span class="s2">        </span><span class="se">\"</span><span class="s2">density</span><span class="se">\"</span><span class="s2">: 58.341553,</span><span class="se">\n</span><span class="s2">        </span><span class="se">\"</span><span class="s2">vertex</span><span class="se">\"</span><span class="s2">: 7</span><span class="se">\n</span><span class="s2">      }</span><span class="se">\n</span><span class="s2">    }</span><span class="se">\n</span><span class="s2">]"</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="p">.</span><span class="nf">request</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="n">response</span><span class="p">.</span><span class="nf">read_body</span>
 </code></pre>
+<aside class="notice">
+N'oubliez pas de remplacer <code>{team}</code> par le nom de votre équipe.
+</aside>
+
       </div>
       <div class="dark-box">
           <div class="lang-selector">
