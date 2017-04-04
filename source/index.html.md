@@ -10,7 +10,7 @@ language_tabs:
   - ruby
 
 toc_footers:
-  - <a href='http://genetic-car.herokuapp.com/#/home'>Portail du jeux</a>
+  - <a href='http://genetic-car.herokuapp.com/#/home'>Portail du jeu</a>
   - <a href='http://genetic-car.herokuapp.com/swagger-ui.html#/'>Documentation Swagger</a>
 
 includes:
